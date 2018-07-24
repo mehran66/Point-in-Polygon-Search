@@ -1,0 +1,135 @@
+function varargout = Point_In_Polygon(varargin)
+% POINT_IN_POLYGON M-file for Point_In_Polygon.fig
+%      POINT_IN_POLYGON, by itself, creates a new POINT_IN_POLYGON or raises the existing
+%      singleton*.
+%
+%      H = POINT_IN_POLYGON returns the handle to a new POINT_IN_POLYGON or the handle to
+%      the existing singleton*.
+%
+%      POINT_IN_POLYGON('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in POINT_IN_POLYGON.M with the given input arguments.
+%
+%      POINT_IN_POLYGON('Property','Value',...) creates a new POINT_IN_POLYGON or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before Point_In_Polygon_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to Point_In_Polygon_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help Point_In_Polygon
+
+% Last Modified by GUIDE v2.5 09-Jul-2011 09:37:25
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @Point_In_Polygon_OpeningFcn, ...
+                   'gui_OutputFcn',  @Point_In_Polygon_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% --- Executes just before Point_In_Polygon is made visible.
+function Point_In_Polygon_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to Point_In_Polygon (see VARARGIN)
+
+% Choose default command line output for Point_In_Polygon
+handles.output = hObject;
+
+% Update handles structure
+guidata(hObject, handles);
+
+% UIWAIT makes Point_In_Polygon wait for user response (see UIRESUME)
+% uiwait(handles.figure1);
+
+
+% --- Outputs from this function are returned to the command line.
+function varargout = Point_In_Polygon_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+
+
+
+function txtV_Callback(hObject, eventdata, handles)
+% hObject    handle to txtV (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of txtV as text
+%        str2double(get(hObject,'String')) returns contents of txtV as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function txtV_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to txtV (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in btnVertices.
+function btnVertices_Callback(hObject, eventdata, handles)
+% hObject    handle to btnVertices (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Vertices;
+m=str2double(get(handles.txtV,'string'));
+% Vertices=ginput(m);
+for n = 1:m
+	[x(n),y(n)] = ginput(1);
+    Vertices(n,1)=x(n);
+    Vertices(n,2)=y(n);
+    text(x(n),y(n),int2str(n))
+end
+x(m+1)=x(1);
+y(m+1)=y(1);
+line(x,y);
+
+% --- Executes on button press in btnPoint.
+function btnPoint_Callback(hObject, eventdata, handles)
+% hObject    handle to btnPoint (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Point;
+Point=ginput(1);
+hold on;
+scatter(Point(1),Point(2),'filled');
+% --- Executes on button press in btnProcess.
+function btnProcess_Callback(hObject, eventdata, handles)
+% hObject    handle to btnProcess (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Vertices Point;
+Temp=PointInPoly(Vertices,Point)
+if Temp==1
+     msgbox('Your point is in the polygon');
+else if 
